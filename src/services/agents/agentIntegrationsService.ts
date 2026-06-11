@@ -1,5 +1,5 @@
 import evoaiApi from '@/services/core/apiEvoAI';
-import { extractData } from '@/utils/apiHelpers';
+import { extractData, normalizeIntegrationConfigs } from '@/utils/apiHelpers';
 
 /**
  * Agent Integrations Service
@@ -30,8 +30,8 @@ class AgentIntegrationsService {
    */
   async getAgentIntegrations(agentId: string): Promise<AgentIntegrationItem[]> {
     const response = await evoaiApi.get(`/agents/${agentId}/integrations`);
-    const data = extractData<AgentIntegrationItem[] | null>(response);
-    return Array.isArray(data) ? data : [];
+    const data = extractData<unknown>(response);
+    return normalizeIntegrationConfigs(data) as AgentIntegrationItem[];
   }
 
   /**

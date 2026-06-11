@@ -183,3 +183,28 @@ export function buildPaginationParams(page: number, pageSize: number): { page: n
   };
 }
 
+export interface IntegrationConfigItem {
+  provider: string;
+  config: Record<string, unknown>;
+}
+
+/**
+ * Normalize the response of GET /agents/{agent_id}/integrations into a flat
+ * array of { provider, config } items.
+ *
+ * The endpoint returns `{ configs: { [provider]: config }, credentials_configured: {...} }`,
+ * with a `connected` flag set on each config — not the `[{ provider, config }]`
+ * array shape consumers historically expected.
+ */
+export function normalizeIntegrationConfigs(data: unknown): IntegrationConfigItem[] {
+  if (Array.isArray(data)) return data as IntegrationConfigItem[];
+
+  const configs = (data as { configs?: Record<string, Record<string, unknown>> } | null | undefined)
+    ?.configs;
+  if (!configs) return [];
+
+  return Object.entries(configs)
+    .filter(([, config]) => config?.connected === true)
+    .map(([provider, config]) => ({ provider, config }));
+}
+

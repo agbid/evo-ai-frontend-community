@@ -15,7 +15,12 @@ import {
   AgentListResponse,
 } from '@/types/agents';
 import { processAgentData } from '@/utils/agentUtils';
-import { extractData, buildPaginationParams, extractResponse } from '@/utils/apiHelpers';
+import {
+  extractData,
+  buildPaginationParams,
+  extractResponse,
+  normalizeIntegrationConfigs,
+} from '@/utils/apiHelpers';
 
 class AgentsService {
   // AI Agents
@@ -76,7 +81,7 @@ class AgentsService {
 
   async getAgentIntegrations(agentId: string): Promise<any[]> {
     const response = await evoaiApi.get(`/agents/${agentId}/integrations`);
-    return extractData<any[]>(response);
+    return normalizeIntegrationConfigs(extractData<unknown>(response));
   }
 
   // AI Folders
