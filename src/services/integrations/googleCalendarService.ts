@@ -1,4 +1,5 @@
 import api from '@/services/core/api';
+import { extractData } from '@/utils/apiHelpers';
 import type {
   GoogleCalendarConfig,
   GoogleCalendarItem,
@@ -51,10 +52,11 @@ const GoogleCalendarService = {
    */
   async getCalendars(agentId: string): Promise<GoogleCalendarItem[]> {
     try {
-      const { data } = await api.get(
+      const response = await api.get(
         `/agents/${agentId}/integrations/google-calendar/calendars`
       );
-      return data.calendars || [];
+      const data = extractData<GoogleCalendarItem[]>(response);
+      return Array.isArray(data) ? data : [];
     } catch (error) {
       console.error('GoogleCalendarService.getCalendars error:', error);
       throw error;
