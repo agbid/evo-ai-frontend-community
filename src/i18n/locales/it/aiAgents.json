@@ -966,7 +966,9 @@
           "weeks": "Settimane",
           "months": "Mesi",
           "minutes": "Minuti"
-        }
+        },
+        "connected": "Google Calendar connesso con successo",
+        "connectError": "Impossibile connettere Google Calendar"
       },
       "gmail": {
         "description": "Collega il tuo agente a Gmail per inviare e ricevere email automaticamente."

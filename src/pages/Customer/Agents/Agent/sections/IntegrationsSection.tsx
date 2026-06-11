@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useLanguage } from '@/hooks/useLanguage';
 import {
   Card,
@@ -38,6 +39,7 @@ const IntegrationsSection = ({
   agentId,
 }: IntegrationsSectionProps) => {
   const { t } = useLanguage('aiAgents');
+  const [searchParams, setSearchParams] = useSearchParams();
   const [showElevenLabsConfig, setShowElevenLabsConfig] = useState(false);
   const [showGoogleCalendarConfig, setShowGoogleCalendarConfig] = useState(false);
   const [showGoogleSheetsConfig, setShowGoogleSheetsConfig] = useState(false);
@@ -46,6 +48,29 @@ const IntegrationsSection = ({
   // Use custom hook for integrations status
   const { credentialsConfigured, isCheckingIntegrations, isConnected, reloadConfigs } =
     useIntegrations(agentId);
+
+  // Handle the redirect back from the Google Calendar OAuth callback
+  // (?google_calendar=success|error&message=...), shown as a toast.
+  useEffect(() => {
+    const googleCalendarResult = searchParams.get('google_calendar');
+    if (!googleCalendarResult) return;
+
+    const message = searchParams.get('message');
+
+    if (googleCalendarResult === 'success') {
+      toast.success(t('edit.integrations.googleCalendar.connected') || 'Google Calendar conectado com sucesso');
+      reloadConfigs();
+    } else if (googleCalendarResult === 'error') {
+      toast.error(
+        message || t('edit.integrations.googleCalendar.connectError') || 'Falha ao conectar com o Google Calendar'
+      );
+    }
+
+    searchParams.delete('google_calendar');
+    searchParams.delete('message');
+    setSearchParams(searchParams, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Persist an integration immediately via the backend Upsert endpoint, then
   // update local state. This is necessary because `agent.config.integrations`
@@ -99,10 +124,16 @@ const IntegrationsSection = ({
 
   // Integrações que sempre estão disponíveis porque o usuário fornece sua
   // própria credencial (API key) — não dependem de OAuth global configurado
-  // pelo administrador. Google Calendar / Sheets usam OAuth global e portanto
-  // só ficam disponíveis quando `credentialsConfigured` indica que o admin
-  // configurou as chaves correspondentes.
-  const ALWAYS_AVAILABLE_INTEGRATIONS = ['elevenlabs', 'knowledge-nexus'];
+  // pelo administrador. Google Calendar / Sheets usam OAuth por agente
+  // (autorização individual via "Conectar com Google"), então também ficam
+  // sempre disponíveis — não há um passo de configuração de admin que
+  // popule `credentialsConfigured` antes do primeiro uso.
+  const ALWAYS_AVAILABLE_INTEGRATIONS = [
+    'elevenlabs',
+    'knowledge-nexus',
+    'google-calendar',
+    'google-sheets',
+  ];
 
   const availableIntegrations: Integration[] = [
     {

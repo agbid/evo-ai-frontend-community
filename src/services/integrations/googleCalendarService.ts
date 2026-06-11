@@ -16,7 +16,7 @@ const GoogleCalendarService = {
         `/agents/${agentId}/integrations/google-calendar/authorization`,
         { email }
       );
-      return data;
+      return data.data;
     } catch (error) {
       console.error('GoogleCalendarService.generateAuthorization error:', error);
       throw error;
@@ -39,7 +39,7 @@ const GoogleCalendarService = {
           state,
         }
       );
-      return data;
+      return data.data;
     } catch (error) {
       console.error('GoogleCalendarService.completeAuthorization error:', error);
       throw error;

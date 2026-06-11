@@ -982,7 +982,9 @@
         "disconnecting": "Desconectando...",
         "saving": "Guardando...",
         "connectedAs": "Conectado como",
-        "notConnected": "No conectado"
+        "notConnected": "No conectado",
+        "connected": "Google Calendar conectado con éxito",
+        "connectError": "Error al conectar Google Calendar"
       },
       "activated": "Integración activada",
       "deactivated": "Integración desactivada",

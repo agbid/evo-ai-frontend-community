@@ -993,7 +993,9 @@
         "disconnecting": "Disconnecting...",
         "saving": "Saving...",
         "connectedAs": "Connected as",
-        "notConnected": "Not connected"
+        "notConnected": "Not connected",
+        "connected": "Google Calendar connected successfully",
+        "connectError": "Failed to connect Google Calendar"
       },
       "googleSheets": {
         "description": "Allows creating, reading, updating and managing Google Sheets spreadsheets.",
