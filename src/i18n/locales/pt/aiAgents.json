@@ -1499,7 +1499,9 @@
     "typeMessage": "Digite sua mensagem...",
     "deleteSession": "Deletar Sessão",
     "deleteSessionConfirm": "Tem certeza que deseja deletar esta sessão? Esta ação não pode ser desfeita.",
-    "session": "Sessão"
+    "session": "Sessão",
+    "testContactPlaceholder": "Contato de teste (opcional)...",
+    "noContactsFound": "Nenhum contato encontrado"
   },
   "mcpServers": {
     "title": "Servidores MCP",

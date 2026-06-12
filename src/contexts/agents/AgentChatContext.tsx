@@ -4,6 +4,7 @@ import { sendChatMessage } from '@/services/agents/chatService';
 import { toast } from 'sonner';
 import { FileData } from '@/utils/fileUtils';
 import { ChatMessage, ChatSession } from '@/types';
+import type { Contact } from '@/types/contacts';
 
 interface AgentChatContextValue {
   // State
@@ -12,6 +13,7 @@ interface AgentChatContextValue {
   selectedSessionId: string | null;
   isLoading: boolean;
   isSending: boolean;
+  selectedContact: Contact | null;
 
   // Actions
   loadSessions: () => Promise<void>;
@@ -20,6 +22,7 @@ interface AgentChatContextValue {
   deleteSession: (sessionId: string) => Promise<void>;
   sendMessage: (content: string, files?: FileData[]) => Promise<void>;
   clearMessages: () => void;
+  setSelectedContact: (contact: Contact | null) => void;
 }
 
 const AgentChatContext = createContext<AgentChatContextValue | undefined>(undefined);
@@ -36,6 +39,7 @@ export function AgentChatProvider({ children, agentId }: AgentChatProviderProps)
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
 
   // Load sessions
   const loadSessions = useCallback(async () => {
@@ -188,7 +192,13 @@ export function AgentChatProvider({ children, agentId }: AgentChatProviderProps)
 
     try {
       // Send message via HTTP endpoint
-      const response = await sendChatMessage(agentId, selectedSessionId!, content, files);
+      const response = await sendChatMessage(
+        agentId,
+        selectedSessionId!,
+        content,
+        files,
+        selectedContact?.id,
+      );
 
       // Add the response messages from the API to the state
       // message_history contains the new messages (may include user message + agent response)
@@ -241,7 +251,7 @@ export function AgentChatProvider({ children, agentId }: AgentChatProviderProps)
     } finally {
       setIsSending(false);
     }
-  }, [selectedSessionId, agentId, loadSessions]);
+  }, [selectedSessionId, agentId, loadSessions, selectedContact]);
 
   // Clear messages
   const clearMessages = useCallback(() => {
@@ -254,6 +264,7 @@ export function AgentChatProvider({ children, agentId }: AgentChatProviderProps)
       // Reset selected session when component mounts (modal opens)
       setSelectedSessionId(null);
       setMessages([]);
+      setSelectedContact(null);
       loadSessions();
     }
   }, [agentId, loadSessions]);
@@ -264,12 +275,14 @@ export function AgentChatProvider({ children, agentId }: AgentChatProviderProps)
     selectedSessionId,
     isLoading,
     isSending,
+    selectedContact,
     loadSessions,
     selectSession,
     createNewSession,
     deleteSession: deleteSessionHandler,
     sendMessage: sendMessageHandler,
     clearMessages,
+    setSelectedContact,
   };
 
   return <AgentChatContext.Provider value={value}>{children}</AgentChatContext.Provider>;

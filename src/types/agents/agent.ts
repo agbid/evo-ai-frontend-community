@@ -210,6 +210,7 @@ export interface ChatMessage {
 export interface ChatRequest {
   message: string;
   files?: unknown[];
+  contact_id?: string;
 }
 
 export interface ChatResponse {

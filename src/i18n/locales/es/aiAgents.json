@@ -1475,7 +1475,9 @@
     "typeMessage": "Escriba su mensaje...",
     "deleteSession": "Eliminar Sesión",
     "deleteSessionConfirm": "¿Está seguro de que desea eliminar esta sesión? Esta acción no se puede deshacer.",
-    "session": "Sesión"
+    "session": "Sesión",
+    "testContactPlaceholder": "Contacto de prueba (opcional)...",
+    "noContactsFound": "No se encontraron contactos"
   },
   "mcpServers": {
     "title": "Servidores MCP",

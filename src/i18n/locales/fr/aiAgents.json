@@ -1450,7 +1450,9 @@
     "typeMessage": "Tapez votre message...",
     "deleteSession": "Supprimer la Session",
     "deleteSessionConfirm": "Êtes-vous sûr de vouloir supprimer cette session ? Cette action ne peut pas être annulée.",
-    "session": "Session"
+    "session": "Session",
+    "testContactPlaceholder": "Contact de test (facultatif)...",
+    "noContactsFound": "Aucun contact trouvé"
   },
   "mcpServers": {
     "title": "Serveurs MCP",

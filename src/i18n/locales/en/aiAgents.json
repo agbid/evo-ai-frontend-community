@@ -1521,7 +1521,9 @@
     "typeMessage": "Type your message...",
     "deleteSession": "Delete Session",
     "deleteSessionConfirm": "Are you sure you want to delete this session? This action cannot be undone.",
-    "session": "Session"
+    "session": "Session",
+    "testContactPlaceholder": "Test contact (optional)...",
+    "noContactsFound": "No contacts found"
   },
   "mcpServers": {
     "title": "MCP Servers",

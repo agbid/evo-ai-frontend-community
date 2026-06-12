@@ -1451,7 +1451,9 @@
     "typeMessage": "Digita il tuo messaggio...",
     "deleteSession": "Elimina Sessione",
     "deleteSessionConfirm": "Sei sicuro di voler eliminare questa sessione? Questa azione non può essere annullata.",
-    "session": "Sessione"
+    "session": "Sessione",
+    "testContactPlaceholder": "Contatto di test (opzionale)...",
+    "noContactsFound": "Nessun contatto trovato"
   },
   "mcpServers": {
     "title": "Server MCP",

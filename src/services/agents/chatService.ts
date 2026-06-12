@@ -11,10 +11,12 @@ export const sendChatMessage = async (
   sessionId: string,
   message: string,
   files?: FileData[],
+  contactId?: string,
 ): Promise<ChatResponse> => {
   const request: ChatRequest = {
     message,
     ...(files && files.length > 0 ? { files } : {}),
+    ...(contactId ? { contact_id: contactId } : {}),
   };
 
   const response = await agentProcessorApi.post<ChatResponse>(
