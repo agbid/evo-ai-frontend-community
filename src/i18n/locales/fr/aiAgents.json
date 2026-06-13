@@ -725,6 +725,8 @@
         "theAgentShould": "l'agent doit",
         "minute": "minute",
         "minutes": "minutes",
+        "hours": "heures",
+        "days": "jours",
         "interactWithClient": "Interagir avec le client",
         "finalizeService": "Finaliser le service",
         "whatShouldAgentSay": "Que doit dire l'agent ?",

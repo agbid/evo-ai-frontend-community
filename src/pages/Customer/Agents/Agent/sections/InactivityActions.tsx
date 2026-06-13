@@ -6,6 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
   Textarea,
+  Input,
   Button,
   Card,
   CardContent,
@@ -23,6 +24,20 @@ interface InactivityActionsProps {
   actions: InactivityAction[];
   onChange: (actions: InactivityAction[]) => void;
 }
+
+type TimeUnit = 'minutes' | 'hours' | 'days';
+
+const UNIT_MULTIPLIERS: Record<TimeUnit, number> = {
+  minutes: 1,
+  hours: 60,
+  days: 1440,
+};
+
+const getUnitForMinutes = (minutes: number): TimeUnit => {
+  if (minutes >= 1440 && minutes % 1440 === 0) return 'days';
+  if (minutes >= 60 && minutes % 60 === 0) return 'hours';
+  return 'minutes';
+};
 
 const InactivityActions = ({ actions, onChange }: InactivityActionsProps) => {
   const { t } = useLanguage('aiAgents');
@@ -45,7 +60,11 @@ const InactivityActions = ({ actions, onChange }: InactivityActionsProps) => {
     onChange(actions.filter(action => action.id !== id));
   };
 
-  const minuteOptions = [2, 5, 10, 15, 30, 60];
+  const unitLabels: Record<TimeUnit, string> = {
+    minutes: t('edit.configuration.inactivityActions.minutes') || 'minutos',
+    hours: t('edit.configuration.inactivityActions.hours') || 'horas',
+    days: t('edit.configuration.inactivityActions.days') || 'dias',
+  };
 
   return (
     <div className="space-y-6">
@@ -73,24 +92,45 @@ const InactivityActions = ({ actions, onChange }: InactivityActionsProps) => {
                         {t('edit.configuration.inactivityActions.ifNotRespondIn') ||
                           'Se não responder em'}
                       </span>
-                      <Select
-                        value={action.minutes.toString()}
-                        onValueChange={value =>
-                          handleUpdateAction(action.id, { minutes: parseInt(value) })
-                        }
-                      >
-                        <SelectTrigger className="w-32">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {minuteOptions.map(min => (
-                            <SelectItem key={min} value={min.toString()}>
-                              {min}{' '}
-                              {t('edit.configuration.inactivityActions.minutes') || 'minutos'}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      {(() => {
+                        const unit = getUnitForMinutes(action.minutes);
+                        const value = action.minutes / UNIT_MULTIPLIERS[unit];
+                        return (
+                          <>
+                            <Input
+                              type="number"
+                              min={1}
+                              value={value}
+                              onChange={e => {
+                                const newValue = parseInt(e.target.value) || 1;
+                                handleUpdateAction(action.id, {
+                                  minutes: newValue * UNIT_MULTIPLIERS[unit],
+                                });
+                              }}
+                              className="w-20"
+                            />
+                            <Select
+                              value={unit}
+                              onValueChange={newUnit =>
+                                handleUpdateAction(action.id, {
+                                  minutes: value * UNIT_MULTIPLIERS[newUnit as TimeUnit],
+                                })
+                              }
+                            >
+                              <SelectTrigger className="w-28">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {(Object.keys(UNIT_MULTIPLIERS) as TimeUnit[]).map(u => (
+                                  <SelectItem key={u} value={u}>
+                                    {unitLabels[u]}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </>
+                        );
+                      })()}
                       <span className="text-sm text-muted-foreground">
                         {t('edit.configuration.inactivityActions.theAgentShould') ||
                           'o agente deve'}
