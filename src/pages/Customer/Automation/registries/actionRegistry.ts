@@ -3,7 +3,13 @@ import type { AutomationActionType } from '@/types/automation';
 
 const idValueSchema = z.union([z.string(), z.number()]);
 
-const sendMessageSchema = z.tuple([z.string().min(1)]);
+// Second element (optional) flags `conversation_created` automations whose
+// welcome message should make AgentBotListener skip the AI agent response
+// for the message that originated this conversation.
+const sendMessageSchema = z.union([
+  z.tuple([z.string().min(1)]),
+  z.tuple([z.string().min(1), z.boolean()]),
+]);
 
 const labelListSchema = z.array(idValueSchema).min(1);
 

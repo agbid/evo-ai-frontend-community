@@ -9,6 +9,7 @@ import {
   Input,
   Textarea,
   Button,
+  Checkbox,
 } from '@evoapi/design-system';
 import { Trash2 } from 'lucide-react';
 import {
@@ -95,12 +96,54 @@ interface ParamsProps {
 }
 
 function ActionParamsRenderer({ control, index, actionName, formData, t }: ParamsProps) {
+  const eventName = useWatch({ control, name: 'event_name' });
+
   if (!actionName) {
     return <div className="text-xs text-muted-foreground">{t('form.fields.actionRow.selectActionFirst')}</div>;
   }
 
   switch (actionName) {
     case 'send_message':
+      return (
+        <div className="space-y-2">
+          <Controller
+            control={control}
+            name={`actions.${index}.action_params`}
+            render={({ field }) => (
+              <Textarea
+                value={asString(field.value, 0)}
+                onChange={(e) => {
+                  const next = Array.isArray(field.value) ? [...field.value] : [];
+                  next[0] = e.target.value;
+                  field.onChange(next);
+                }}
+                placeholder={t(`form.fields.actionRow.params.${actionName}`)}
+                rows={4}
+              />
+            )}
+          />
+          {eventName === 'conversation_created' && (
+            <Controller
+              control={control}
+              name={`actions.${index}.action_params`}
+              render={({ field }) => (
+                <label className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Checkbox
+                    checked={Array.isArray(field.value) && field.value[1] === true}
+                    onCheckedChange={(checked) => {
+                      const next = Array.isArray(field.value) ? [...field.value] : [''];
+                      next[1] = checked === true;
+                      field.onChange(next);
+                    }}
+                  />
+                  {t('form.fields.actionRow.params.send_message_skip_agent')}
+                </label>
+              )}
+            />
+          )}
+        </div>
+      );
+
     case 'send_webhook_event':
     case 'send_email_transcript':
       return (

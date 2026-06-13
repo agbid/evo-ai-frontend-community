@@ -111,6 +111,7 @@
         "noParams": "Sem parâmetros",
         "params": {
           "send_message": "Conteúdo da mensagem",
+          "send_message_skip_agent": "Não acionar o agente de IA para a mensagem que originou esta conversa (evita saudação duplicada)",
           "send_canned_response": "Escolha uma resposta pronta",
           "send_template": "Escolha um template",
           "send_webhook_event": "URL do webhook",
